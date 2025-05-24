@@ -1,3 +1,9 @@
+-- Map chose from list
+vim.keymap.set('i', '<F8>', function()
+  local keys = vim.api.nvim_replace_termcodes('<C-n><C-p>', true, false, true)
+  vim.api.nvim_feedkeys(keys, 'i', true)
+end, { desc = 'First choice in linter' })
+
 -- tabstop - shiftwidth
 vim.opt.tabstop = 4 -- Number of spaces that a <Tab> counts for
 vim.opt.shiftwidth = 4 -- Size of an indent
@@ -43,9 +49,9 @@ vim.opt.showmode = false
 --  Schedule the setting after `UiEnter` because it can increase startup-time.
 --  Remove this option if you want your OS clipboard to remain independent.
 --  See `:help 'clipboard'`
-vim.schedule(function()
-  vim.opt.clipboard = 'unnamedplus'
-end)
+-- vim.schedule(function()
+--   vim.opt.clipboard = 'unnamedplus'
+-- end)
 
 -- Enable break indent
 vim.opt.breakindent = true

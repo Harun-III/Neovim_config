@@ -715,6 +715,7 @@ require('lazy').setup({
       -- Snippet Engine
       {
         'L3MON4D3/LuaSnip',
+        event = 'InsertEnter',
         version = '2.*',
         build = (function()
           -- Build Step is needed for regex support in snippets.
@@ -729,12 +730,12 @@ require('lazy').setup({
           -- `friendly-snippets` contains a variety of premade snippets.
           --    See the README about individual language/framework/plugin snippets:
           --    https://github.com/rafamadriz/friendly-snippets
-          -- {
-          --   'rafamadriz/friendly-snippets',
-          --   config = function()
-          --     require('luasnip.loaders.from_vscode').lazy_load()
-          --   end,
-          -- },
+          {
+            'rafamadriz/friendly-snippets',
+            config = function()
+              require('luasnip.loaders.from_vscode').lazy_load()
+            end,
+          },
         },
         opts = {},
       },
@@ -942,6 +943,21 @@ require('lazy').setup({
     },
   },
 })
+
+-- LuaSnip keymaps for jumping through snippet placeholders
+vim.keymap.set({ 'i', 's' }, '<C-l>', function()
+  local luasnip = require 'luasnip'
+  if luasnip.jumpable(1) then
+    luasnip.jump(1)
+  end
+end, { silent = true, desc = 'Jump to next snippet placeholder' })
+
+vim.keymap.set({ 'i', 's' }, '<C-h>', function()
+  local luasnip = require 'luasnip'
+  if luasnip.jumpable(-1) then
+    luasnip.jump(-1)
+  end
+end, { silent = true, desc = 'Jump to previous snippet placeholder' })
 
 -- The line beneath this is called `modeline`. See `:help modeline`
 -- vim: ts=2 sts=2 sw=2 et

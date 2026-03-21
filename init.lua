@@ -918,6 +918,19 @@ require('lazy').setup({
   --
   --  Uncomment the following line and add your plugins to `lua/custom/plugins/*.lua` to get going.
   -- { import = 'custom.plugins' },
+  {
+    'ej-shafran/compile-mode.nvim',
+    version = '^5.0.0',
+    dependencies = {
+      'nvim-lua/plenary.nvim',
+    },
+    config = function()
+      ---@type CompileModeOpts
+      vim.g.compile_mode = {
+        -- default_command = "make -k ",
+      }
+    end,
+  },
   --
   -- For additional information with loading, sourcing and examples see `:help lazy.nvim-🔌-plugin-spec`
   -- Or use telescope!
@@ -959,6 +972,10 @@ vim.keymap.set({ 'i', 's' }, '<C-h>', function()
     luasnip.jump(-1)
   end
 end, { silent = true, desc = 'Jump to previous snippet placeholder' })
+
+-- Compiler Shortcuts
+vim.keymap.set('n', '<leader>cc', '<cmd>Compile<CR>', { desc = '[C]ompile' })
+vim.keymap.set('n', '<leader>cr', '<cmd>Recompile<CR>', { desc = '[C]ompile [R]erun' })
 
 -- The line beneath this is called `modeline`. See `:help modeline`
 -- vim: ts=2 sts=2 sw=2 et

@@ -40,7 +40,7 @@ vim.opt.number = true
 vim.opt.relativenumber = true
 
 -- Enable mouse mode, can be useful for resizing splits for example!
-vim.opt.mouse = 'c'
+vim.opt.mouse = 'a'
 
 -- Don't show the mode, since it's already in the status line
 vim.opt.showmode = false
@@ -338,9 +338,36 @@ require('lazy').setup({
         --     i = { ['<c-enter>'] = 'to_fuzzy_refine' },
         --   },
         -- },
+        --
+        -- NOTE: Old_picker: delete this after testing
+        -- pickers = {
+        --   man_pages = {
+        --     sections = { '1', '2', '3', '4', '5', '6', '7', '8', '9' },
+        --   },
+        -- },
+        --
         pickers = {
           man_pages = {
             sections = { '1', '2', '3', '4', '5', '6', '7', '8', '9' },
+            attach_mappings = function(prompt_bufnr, map)
+              local actions = require 'telescope.actions'
+              local action_set = require 'telescope.actions.set'
+              local action_state = require 'telescope.actions.state'
+              action_set.select:replace(function(_, type)
+                local entry = action_state.get_selected_entry()
+                actions.close(prompt_bufnr)
+                if type == 'default' then
+                  vim.cmd('edit man://' .. entry.value)
+                elseif type == 'horizontal' then
+                  vim.cmd('Man ' .. entry.value)
+                elseif type == 'vertical' then
+                  vim.cmd('vert bo Man ' .. entry.value)
+                elseif type == 'tab' then
+                  vim.cmd('tabnew | Man ' .. entry.value)
+                end
+              end)
+              return true
+            end,
           },
         },
         extensions = {
@@ -974,8 +1001,8 @@ vim.keymap.set({ 'i', 's' }, '<C-h>', function()
 end, { silent = true, desc = 'Jump to previous snippet placeholder' })
 
 -- Compiler Shortcuts
-vim.keymap.set('n', '<leader>cc', '<cmd>Compile<CR>', { desc = '[C]ompile' })
-vim.keymap.set('n', '<leader>cr', '<cmd>Recompile<CR>', { desc = '[C]ompile [R]erun' })
+vim.keymap.set('n', '<leader>cr', '<cmd>Compile<CR>', { desc = '[C]ompile' })
+vim.keymap.set('n', '<leader>cc', '<cmd>Recompile<CR>', { desc = '[C]ompile [C]erun' })
 
 -- The line beneath this is called `modeline`. See `:help modeline`
 -- vim: ts=2 sts=2 sw=2 et
